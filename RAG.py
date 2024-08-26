@@ -9,14 +9,14 @@ from langchain_openai import OpenAI
 from dotenv import load_dotenv
 load_dotenv()
 api=os.environ.get("PINECONE_API_KEY")
+index_name=os.environ.get("INDEX_NAME")
 PINECONE_API_KEY = Pinecone(api_key=api)
 embeddings = HuggingFaceBgeEmbeddings(model_name="BAAI/bge-small-en-v1.5")
-
 def _combine_documents(
     docs ,document_separator="\n\n"):
         doc_strings = [doc.page_content for doc in docs]
         return document_separator.join(doc_strings)
-def qa_ret(history,index_name,input_query):
+def qa_ret(history,input_query):
     try:
         docsearch = PineconeVectorStore.from_existing_index(embedding=embeddings, index_name=index_name)
         # input_query="The first three parts laid the foundation for this concept of tiny, daily actions?"
