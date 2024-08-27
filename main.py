@@ -13,13 +13,13 @@ load_dotenv()
 
 app = FastAPI()
 
-DB_NAME = os.environ.get("DB_NAME")
+# DB_NAME = os.environ.get("DB_NAME")
 DB_USER = os.environ.get("DB_USER")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = os.environ.get("DB_PORT")
 conn = psycopg2.connect(
-    dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT
+    user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT
 )
 cursor = conn.cursor()
 
@@ -30,7 +30,7 @@ def startup_event():
 
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS Chatbot (
-            id SERIAL PRIMARY KEY,
+            id SERIAL PRIMARY KEY
         );
         
         CREATE TABLE IF NOT EXISTS ChatHistory (
@@ -74,7 +74,7 @@ async def chat(chat_id: int = Form(...),query: str = Form(...)):
         if user:
             logger.info("User authenticated successfully")
         else:
-            cursor.execute("INSERT INTO Chatbot (id) VALUES (%s,%s)", (chat_id))
+            cursor.execute("INSERT INTO Chatbot (id) VALUES (%s)", (chat_id))
             conn.commit()
         cursor.execute("""
         INSERT INTO ChatHistory (chat_id, human_message, ai_message)
@@ -84,7 +84,6 @@ async def chat(chat_id: int = Form(...),query: str = Form(...)):
         conn.commit()
         return {
             "user_qeury":query,
-            "tittle":tittle,
             "response":response
         }
     except Exception as e:
@@ -159,6 +158,7 @@ async def analyze_lor(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
+
+
 if __name__ == "__main__":
-    
-    uvicorn.run(app, host="127.0.0.1", port=4400)
+    uvicorn.run(app, host="127.0.0.1", port=9292)
