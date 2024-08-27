@@ -3,11 +3,10 @@ import os
 from langchain_core.output_parsers import StrOutputParser
 from pinecone import Pinecone
 from langchain_pinecone import PineconeVectorStore
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from operator import itemgetter
 from langchain_openai import ChatOpenAI
 from langchain_openai import OpenAIEmbeddings
-from langchain_core.runnables import  RunnablePassthrough, RunnableParallel
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -29,8 +28,7 @@ def qa_ret(history,input_query):
         num_chunks=3
         retriever=docsearch.as_retriever(search_type='similarity', search_kwargs={"k": num_chunks})
         template = """You are AI assistant that assisant user by providing answer to the question of user by extracting information from provided context and history:
-        {context} and {history} if you do not find any relevant information from context or history for given question just say ask me another quuestion. you are ai assistant.
-        Answer should not be greater than 3 lines.
+        {context} and {history}.
         Question: {question}
         """
         prompt = ChatPromptTemplate.from_template(template)

@@ -6,7 +6,6 @@ from io import BytesIO
 import base64
 import os
 import fitz  # PyMuPDF for PDF text extraction
-import uvicorn
 from docx import Document  # For DOCX file handling
 
 # Load environment variables from .env file
