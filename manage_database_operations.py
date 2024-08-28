@@ -3,10 +3,10 @@ import os
 
 # Set up database connection using environment variables
 conn = psycopg2.connect(
-    user=os.environ.get("DB_USER"),
-    password=os.environ.get("DB_PASSWORD"),
-    host=os.environ.get("DB_HOST"),
-    port=os.environ.get("DB_PORT")
+    user="postgres",
+    password="RdsSecurePwd2024!786",
+    host="db-studyfinland.cb4soq0q4vky.us-east-1.rds.amazonaws.com",
+    port=5432
 )
 
 def fetch_chat_history(chat_id):

@@ -1,27 +1,12 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
-from openai import OpenAI
 from dotenv import load_dotenv
 from io import BytesIO
 import base64
 import os
 import fitz  # PyMuPDF for PDF text extraction
 from docx import Document  # For DOCX file handling
-
-# Load environment variables from .env file
 load_dotenv()
-
-# Set up OpenAI client
-openai_api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=openai_api_key)
-MODEL = "gpt-4o"
-
-app = FastAPI()
-
-def encode_image(image_bytes):
-    """Encode an image file in base64 format."""
-    return base64.b64encode(image_bytes).decode("utf-8")
-
 def extract_text_from_pdf(pdf_bytes):
     """Extract text from a PDF file."""
     text = ""
