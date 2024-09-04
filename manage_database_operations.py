@@ -1,15 +1,17 @@
 import psycopg2
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 # Set up database connection using environment variables
-conn = psycopg2.connect(
-    user="postgres",
-    password="RdsSecurePwd2024!786",
-    host="db-studyfinland.cb4soq0q4vky.us-east-1.rds.amazonaws.com",
-    port=5432
-)
+
 
 def fetch_chat_history(chat_id):
+    conn = psycopg2.connect(
+    user=os.environ.get("DB_USER"),
+    password=os.environ.get("DB_PASSWORD"),
+    host=os.environ.get("DB_HOST"),
+    port=os.environ.get("DB_PORT")
+    )
     try:
         with conn.cursor() as cursor:
             cursor.execute("""
@@ -32,6 +34,12 @@ def fetch_chat_history(chat_id):
 
 
 def insert_chat_history(chat_id, query, response):
+    conn = psycopg2.connect(
+    user=os.environ.get("DB_USER"),
+    password=os.environ.get("DB_PASSWORD"),
+    host=os.environ.get("DB_HOST"),
+    port=os.environ.get("DB_PORT")
+    )
     try:
         with conn.cursor() as cursor:
             # Check if the chat_id exists in the Chatbot table

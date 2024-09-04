@@ -2,10 +2,10 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from io import BytesIO
-import base64
-import os
 import fitz  # PyMuPDF for PDF text extraction
-from docx import Document  # For DOCX file handling
+from docx import Document # For DOCX file handling
+from langchain_community.document_loaders import PyMuPDFLoader
+import os 
 load_dotenv()
 def extract_text_from_pdf(pdf_bytes):
     """Extract text from a PDF file."""
@@ -25,4 +25,17 @@ def extract_text_from_docx(docx_bytes):
     for para in document.paragraphs:
         text += para.text + "\n"
     return text
+
+
+
+def file_loader(file_path):
+    _, file_extension = os.path.splitext(file_path)
+    if file_extension == ".pdf":
+        loader = PyMuPDFLoader(file_path)
+        data = loader.load()
+    else:
+        raise Exception("Text splitting failed")
+    return data
+
+file_loader(r"D:\StudyFinland\BachelorTranscript1.pdf")
 
