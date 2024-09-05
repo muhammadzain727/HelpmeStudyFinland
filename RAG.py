@@ -11,7 +11,7 @@ api=os.getenv("PINECONE_API_KEY")
 index_name=os.getenv("INDEX_NAME")
 PINECONE_API_KEY = Pinecone(api_key=api)
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+embeddings =OpenAIEmbeddings(model="text-embedding-3-small")
 def _combine_documents(
     docs ,document_separator="\n\n"):
         doc_strings = [doc.page_content for doc in docs]
@@ -20,7 +20,7 @@ def _combine_documents(
 def ai_consultant(history,input_query):
     try:
         docsearch = PineconeVectorStore.from_existing_index(embedding=embeddings, index_name=index_name)
-        num_chunks=3
+        num_chunks=7
         retriever=docsearch.as_retriever(search_type='similarity', search_kwargs={"k": num_chunks})
         template = """You are an AI consultant specializing in guiding users about studying and living in Finland. Utilize the information from the provided context, user history, and your own knowledge to deliver clear, friendly, and concise responses.
         Context: {context}
@@ -55,55 +55,79 @@ def ai_consultant(history,input_query):
     
 def analyze_letter_of_motivation(program_name,program_description,lom):
     try:
-            template = """You are an expert in Letter of Motivation {lom} for Bachelor's, Masters, and Phd programs
-            evaluation for admissions in Finland Universities for both applied sciences universities and research based universities.
-            Your task is analayze it first after that rate this document out of 10 and and also gives at least 3 suggestions to improve the letter of motivation.
-            Instructions:
-            **1. Analyze for grammer mistakes, sentence structuring, vocabulary.**
-            **2. Check program relevancy by matching letter of motivation with {program_name}, {program_description}**
-            **3. Check for any kind of acheivements relevent to {program_name}**
-            **4. Check for any research experiance or work experiance relevant to {program_name}**
-            **5. Check for the user motivational statements why they want to study in respective field {program_name}**
-            **6. Response should not be greater than 5 lines**
-            Note : 
-            **After analyzing the above instructuction rate the letter out of 10 deduct rating based on above instructions**
-            """
-            context_fetcher=itemgetter("lom")
-            setup_and_retrieval={"lom": context_fetcher,"program_name":itemgetter("program_name"),"program_description":itemgetter("program_description")}
-            model = ChatOpenAI(model="gpt-4o-mini",api_key=OPENAI_API_KEY)
-            prompt = ChatPromptTemplate.from_template(template)
-            output_parser = StrOutputParser()
-            chain = setup_and_retrieval | prompt | model | output_parser
-            res = chain.invoke({"lom": lom,"program_name":program_name,"program_description":program_description})
-            return res
+        template = """You are an expert in Letter of Motivation {lom} for Bachelor's, Masters, and Phd programs
+        evaluation for admissions in Finland Universities for both applied sciences universities and research based universities.
+        Your task is analayze it first after that rate this document out of 10 and and also gives at least 3 suggestions to improve the letter of motivation.
+        Instructions:
+        **1. Analyze for grammer mistakes, sentence structuring, vocabulary.**
+        **2. Check program relevancy by matching letter of motivation with {program_name}, {program_description}**
+        **3. Check for any kind of acheivements relevent to {program_name}**
+        **4. Check for any research experiance or work experiance relevant to {program_name}**
+        **5. Check for the user motivational statements why they want to study in respective field {program_name}**
+        **6. Response should not be greater than 5 lines**
+        Note : 
+        **After analyzing the above instructuction rate the letter out of 10 deduct rating based on above instructions**
+        """
+        context_fetcher=itemgetter("lom")
+        setup_and_retrieval={"lom": context_fetcher,"program_name":itemgetter("program_name"),"program_description":itemgetter("program_description")}
+        model = ChatOpenAI(model="gpt-4o-mini",api_key=OPENAI_API_KEY)
+        prompt = ChatPromptTemplate.from_template(template)
+        output_parser = StrOutputParser()
+        chain = setup_and_retrieval | prompt | model | output_parser
+        res = chain.invoke({"lom": lom,"program_name":program_name,"program_description":program_description})
+        return res
     except Exception as e:
-            raise e
+        raise e
     
-# def transcript_evaluation(program_name,program_description,transcript_of_records):
-#     try:
-#             template = """You are an expert in Transcript {transcript_of_records} for Bachelor's, Masters, and Phd programs
-#             evaluation for admissions in Finland Universities for both applied sciences universities and research based universities.
-#             Your task is analayze it first after than give some 3 peaceful advice basis on the record and also tells him with this transcript of records how many percent of
-#             chances are that you get admission in Finland.
-#             Instructions:
-#             **1. Analyze the grades of each subject or course**
-#             **2. Check program relevancy by matching Transcript with {program_name}, {program_description}**
-#             **3. Check for any kind of poor grades in those subjects relevent to {program_name}**
-#             **5. Check for if the transcript has irrelevant information than just said the provided information is irrelevant**
-#             **6. Response should not be greater than 5 lines**
-#             Note : 
-#             **After analyzing the above instructuction tells te user how many percent of chances are there that you will get admission in Finland Universities.**
-#             """
-#             context_fetcher=itemgetter("transcript_of_records")
-#             setup_and_retrieval={"transcript_of_records": context_fetcher,"program_name":itemgetter("program_name"),"program_description":itemgetter("program_description")}
-#             model = ChatOpenAI(model="gpt-4o-mini",api_key=OPENAI_API_KEY)
-#             prompt = ChatPromptTemplate.from_template(template)
-#             output_parser = StrOutputParser()
-#             chain = setup_and_retrieval | prompt | model | output_parser
-#             res = chain.invoke({"transcript_of_records": transcript_of_records,"program_name":program_name,"program_description":program_description})
-#             return res
-#     except Exception as e:
-#             raise e
+def transcript_evaluation(program_name,program_description,transcript_of_records):
+    try:
+        template = """You are an expert in Transcript {transcript_of_records} for Bachelor's, Masters, and Phd programs
+        evaluation for admissions in Finland Universities for both applied sciences universities and research based universities.
+        Your task is analayze it first after than give some 3 peaceful advice basis on the record and also tells him with this transcript of records how many percent of
+        chances are that you get admission in Finland.
+        Instructions:
+        **1. Analyze the grades of each subject or course**
+        **2. Check program relevancy by matching Transcript with {program_name}, {program_description}**
+        **3. Check for any kind of poor grades in those subjects relevent to {program_name}**
+        **5. Check for if the transcript has irrelevant information than just said the provided information is irrelevant**
+        **6. Response should not be greater than 5 lines**
+        Note : 
+        **After analyzing the above instructions tells te user how many percent of chances are there that you will get admission in Finland Universities.**
+        """
+        context_fetcher=itemgetter("transcript_of_records")
+        setup_and_retrieval={"transcript_of_records": context_fetcher,"program_name":itemgetter("program_name"),"program_description":itemgetter("program_description")}
+        model = ChatOpenAI(model="gpt-4o-mini",api_key=OPENAI_API_KEY)
+        prompt = ChatPromptTemplate.from_template(template)
+        output_parser = StrOutputParser()
+        chain = setup_and_retrieval | prompt | model | output_parser
+        res = chain.invoke({"transcript_of_records": transcript_of_records,"program_name":program_name,"program_description":program_description})
+        return res
+    except Exception as e:
+        raise e
+    
+def resume_evaluation(program_name,program_description,resume):
+    try:
+        template = """You are an expert in resume or cv {resume} for Bachelor's, Masters, and Phd programs
+        evaluation for admissions in Finland Universities for both applied sciences universities and research based universities.
+        Your task is analayze it first after than give some 3 peaceful advice basis on the record and also rate the resume out of 10
+        Instructions:
+        **1. Analyze marks, CGPA or Grades if provided in resume**
+        **2. Check program relevancy by matching reume with {program_name}, {program_description}**
+        **3. Check for if the resume has irrelevant information than just said the provided information is irrelevant**
+        **4. Response should not be greater than 5 lines**
+        Note : 
+        **After analyzing the above instructions rate the resume out of 10 and also tells the user how many chances are there that you will get admission in this {program_name} in Finland University .**
+        """
+        context_fetcher=itemgetter("resume")
+        setup_and_retrieval={"resume": context_fetcher,"program_name":itemgetter("program_name"),"program_description":itemgetter("program_description")}
+        model = ChatOpenAI(model="gpt-4o-mini",api_key=OPENAI_API_KEY)
+        prompt = ChatPromptTemplate.from_template(template)
+        output_parser = StrOutputParser()
+        chain = setup_and_retrieval | prompt | model | output_parser
+        res = chain.invoke({"resume": resume,"program_name":program_name,"program_description":program_description})
+        return res
+    except Exception as e:
+        raise e
     
 def history_summerizer(history):
     try:

@@ -64,3 +64,22 @@ def insert_chat_history(chat_id, query, response):
 
     except Exception as e:
         print(e)
+
+
+def delete_chat_history(chat_id):
+    conn = psycopg2.connect(
+    user=os.environ.get("DB_USER"),
+    password=os.environ.get("DB_PASSWORD"),
+    host=os.environ.get("DB_HOST"),
+    port=os.environ.get("DB_PORT")
+    )
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("""
+            DELETE FROM chathistory 
+            WHERE chat_id = %s;
+            """, (chat_id,))
+            conn.commit()
+            return "Chat History Deleted Successfully"
+    except Exception as e:
+        raise e
