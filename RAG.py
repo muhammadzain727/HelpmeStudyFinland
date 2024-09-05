@@ -133,7 +133,7 @@ def history_summerizer(history):
     try:
         template = """You are an expert chat history summerizer. Your task is to summerize the chat history {history}.
         Instructions:
-        **Summerize the chat history in 2 lines maximum do not exceed than 2 lines.**
+        **Summerize the chat history in 3 lines maximum do not exceed than 2 lines.**
         **Anlyze the User Question and AI answer properly**
         """
         model = ChatOpenAI(model="gpt-4o-mini",api_key=OPENAI_API_KEY)

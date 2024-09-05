@@ -20,6 +20,3 @@ def extract_text_from_docx(docx_bytes):
     for para in document.paragraphs:
         text += para.text + "\n"
     return text
-
-
-
