@@ -33,7 +33,7 @@ async def chat(chat_id:int,query: str):
     
 
 @app.post("/api/helpmestudyfinland/LetterOfMotivationEvaluator")
-async def analyze_lor(name_of_program:str,program_description:str,file: UploadFile = File(...)):
+async def analyze_lom(name_of_program:str,program_description:str,file: UploadFile = File(...)):
     try:
         # Ensure the file type is either PDF or DOCX
         if file.content_type not in ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
@@ -58,7 +58,7 @@ async def analyze_lor(name_of_program:str,program_description:str,file: UploadFi
         return JSONResponse(status_code=500, detail=f"An error occurred: {str(e)}")
 
 @app.post("/api/helpmestudyfinland/AcademicRecordEvaluator")
-async def analyze_lor(name_of_program: str, program_description: str, file: UploadFile = File(...)):
+async def analyze_transcript(name_of_program: str, program_description: str, file: UploadFile = File(...)):
     try:
         # Ensure the file type is either PNG or JPG
         if file.content_type not in ["image/png", "image/jpeg"]:
@@ -78,7 +78,7 @@ async def analyze_lor(name_of_program: str, program_description: str, file: Uplo
 
     
 @app.post("/api/helpmestudyfinland/ResumeEvaluator")
-async def analyze_lor(name_of_program:str,program_description:str,file: UploadFile = File(...)):
+async def analyze_resume(name_of_program:str,program_description:str,file: UploadFile = File(...)):
     try:
         # Ensure the file type is either PDF or DOCX
         if file.content_type not in ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
@@ -103,7 +103,7 @@ async def analyze_lor(name_of_program:str,program_description:str,file: UploadFi
         return JSONResponse(status_code=500, detail=f"An error occurred: {str(e)}")
     
 @app.delete("/api/helpmestudyfinland/DeleteChat")
-async def analyze_lor(chat_id:int):
+async def delete_chat(chat_id:int):
     try:
         chat_deleted=delete_chat_history(chat_id)
         return JSONResponse(content={"message": chat_deleted})
