@@ -7,8 +7,8 @@ from operator import itemgetter
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from dotenv import load_dotenv
 load_dotenv()
-api=os.getenv("PINECONE_API_KEY")
-index_name=os.getenv("INDEX_NAME")
+api=os.environ.get("PINECONE_API_KEY")
+index_name=os.environ.get("INDEX_NAME")
 PINECONE_API_KEY = Pinecone(api_key=api)
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 embeddings =OpenAIEmbeddings(model="text-embedding-3-small")
