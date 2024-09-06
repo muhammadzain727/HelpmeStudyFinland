@@ -59,12 +59,13 @@ def analyze_letter_of_motivation(program_name,program_description,lom):
         evaluation for admissions in Finland Universities for both applied sciences universities and research based universities.
         Your task is analayze it first after that rate this document out of 10 and and also gives at least 3 suggestions to improve the letter of motivation.
         Instructions:
-        **1. Analyze for grammer mistakes, sentence structuring, vocabulary.**
-        **2. Check program relevancy by matching letter of motivation with {program_name}, {program_description}**
-        **3. Check for any kind of acheivements relevent to {program_name}**
-        **4. Check for any research experiance or work experiance relevant to {program_name}**
-        **5. Check for the user motivational statements why they want to study in respective field {program_name}**
-        **6. Response should not be greater than 5 lines**
+        **1. Analyze that the provided lom is actually lom or not if it do not seem like letter of motivation than say the provided document is something else.
+        **2. Analyze for grammer mistakes, sentence structuring, vocabulary.**
+        **3. Check program relevancy by matching letter of motivation with {program_name}, {program_description}**
+        **4. Check for any kind of acheivements relevent to {program_name}**
+        **5. Check for any research experiance or work experiance relevant to {program_name}**
+        **6. Check for the user motivational statements why they want to study in respective field {program_name}**
+        **7. Response should not be greater than 5 lines**
         Note : 
         **After analyzing the above instructuction rate the letter out of 10 deduct rating based on above instructions**
         """

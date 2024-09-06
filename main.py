@@ -12,7 +12,6 @@ load_dotenv()
 
 app = FastAPI()
 
-
 @app.post("/api/helpmestudyfinland/AIconsultant")
 async def chat(chat_id:int,query: str):
     try:
@@ -31,7 +30,6 @@ async def chat(chat_id:int,query: str):
         logger.error(f"An error occurred {e}")
         return JSONResponse({"error": str(e)}, status_code=500)
     
-
 @app.post("/api/helpmestudyfinland/LetterOfMotivationEvaluator")
 async def analyze_lom(name_of_program:str,program_description:str,file: UploadFile = File(...)):
     try:
@@ -64,15 +62,11 @@ async def analyze_transcript(name_of_program: str, program_description: str, fil
         if file.content_type not in ["image/png", "image/jpeg"]:
             raise JSONResponse(status_code=400, detail="Unsupported file type. Please upload a PNG or JPG file.")
         # Read the uploaded file
-        # file_content = await file.read()
-        image_file=file.filename
-        base64_image=encode_image(image_file)
-        image_text=extract_text_from_image(base64_image)
-
-        # Extract and return the response from OpenAI
+        file_content = await file.read()
+        encoded_file = base64.b64encode(file_content).decode("utf-8")
+        image_text =extract_text_from_image(encoded_file)
         result = transcript_evaluation(name_of_program, program_description, image_text)
         return JSONResponse(content={"analysis": result})
-
     except Exception as e:
         return JSONResponse(status_code=500, content={"detail": f"An error occurred: {str(e)}"}) 
 
@@ -83,19 +77,13 @@ async def analyze_resume(name_of_program:str,program_description:str,file: Uploa
         # Ensure the file type is either PDF or DOCX
         if file.content_type not in ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
             raise JSONResponse(status_code=400, detail="Unsupported file type. Please upload a PDF or DOCX file.")
-
-        # Read the uploaded file
         file_content = await file.read()
-
         if file.content_type == "application/pdf":
             # Extract text from PDF
             extracted_text = extract_text_from_pdf(file_content)
         elif file.content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
             # Extract text from DOCX
             extracted_text = extract_text_from_docx(file_content)
-
-
-        # Extract and return the response from OpenAI
         result = resume_evaluation(name_of_program,program_description,extracted_text)
         return JSONResponse(content={"analysis": result})
 

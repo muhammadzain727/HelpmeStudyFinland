@@ -63,7 +63,7 @@ def insert_chat_history(chat_id, query, response):
             print(f"Inserted chat history with ID: {inserted_id}")
 
     except Exception as e:
-        print(e)
+        raise e
 
 
 def delete_chat_history(chat_id):
