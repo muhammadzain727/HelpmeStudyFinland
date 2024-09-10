@@ -99,4 +99,4 @@ async def delete_chat(chat_id:int):
         return JSONResponse(status_code=500, detail=f"An error occurred: {str(e)}")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=9393)
+    uvicorn.run(app, host="0.0.0.0", port=9393)
